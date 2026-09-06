@@ -78,11 +78,11 @@ jobs:
     - name: Test and coverage backend
       run: npm run test:backend:coverage
       env:
-        DB_TEST_HOST: localhost
-        DB_TEST_PORT: ${{secrets.DB_TEST_PORT}}
-        DB_TEST_USER: ${{secrets.DB_TEST_USER}}
-        DB_TEST_PASSWORD: ${{secrets.DB_TEST_PASSWORD}}
-        DB_TEST_NAME: ${{secrets.DB_TEST_NAME}}
+        DB_HOST: localhost
+        DB_PORT: ${{secrets.DB_TEST_PORT}}
+        DB_USER: ${{secrets.DB_TEST_USER}}
+        DB_PASSWORD: ${{secrets.DB_TEST_PASSWORD}}
+        DB_NAME: ${{secrets.DB_TEST_NAME}}
         COGNITO_USER_POOL_ID: ${{secrets.COGNITO_USER_POOL_ID}}
         COGNITO_CLIENT_ID: ${{secrets.COGNITO_CLIENT_ID}}
         COGNITO_REGION: ${{secrets.COGNITO_REGION}}

@@ -110,6 +110,7 @@ jobs:
         COGNITO_JWKS_URI: ${{secrets.COGNITO_JWKS_URI}}
         REDIS_URL: ${{secrets.REDIS_URL}}
         FRONTEND_URL: ${{secrets.FRONTEND_URL}}
+        PORT: ${{secrets.PORT}}
 
     - name: Waiting for backend to be ready for the frontend integration tests
       run: |

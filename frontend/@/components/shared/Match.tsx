@@ -4,7 +4,6 @@ import door from 'src/assets/Decor/door.png'
 
 import { Badge } from '../ui/badge'
 import { Progress } from '../ui/progress'
-import { UseUserPose } from 'src/Views/Profile'
 
 
 interface MatchScreenProps {

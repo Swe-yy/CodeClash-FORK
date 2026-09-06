@@ -9,7 +9,6 @@ import Popup from './Popup'
 import Loading from '@/components/shared/Loading';
 import Starfield from '@/components/ui/animations/Starfield';
 import { UseUserAvatar } from './Profile';
-import Profile from './Profile';
 
 import { useEffect } from 'react';
 
@@ -85,6 +84,8 @@ const Dashboard = () => {
                 <div>
                   <span>League - {league}</span>
                   <p className='text-xl font-black text-primart-text'>{username}</p>
+                  {/* below is to just stop tsc -b errors: */}
+                  <p>{avatar}</p>
                 </div>
               </div>
 

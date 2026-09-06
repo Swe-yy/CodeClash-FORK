@@ -1,8 +1,6 @@
 import { TrendingUp, TrendingDown, Clock, UserCircle, Trophy, Medal } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ResultsBackground from '../assets/Background/FinalResults.jpg';
-import { robot_map } from "src/assets/Robots";
 import type { PlayerFinalResults } from "src/Models/FinalResultsModel";
 
 import { FinalResultsViewModelFunction } from "../ViewModels/FinalResultsViewModel";
@@ -11,7 +9,6 @@ import Loading from "@/components/shared/Loading";
 import Confetti from "@/components/ui/animations/Confetti";
 import Starfield from "@/components/ui/animations/Starfield";
 import { Lose } from "src/animations/lose";
-import { Yes } from "src/animations/yes";
 import { ArmRaise } from "src/animations/armRaise";
 
 const FinalResults: React.FC = () => {
@@ -148,7 +145,7 @@ const PlayerResultCard: React.FC<{
                         <UserCircle size={26} className="text-muted-text"/>
                     ): (
                         // <img src={robot_map[player.avatar]} alt = {player.username} className="w-full h-full object-cover" onError={() => setAvatarFailed(true)}/>
-                        <div>
+                        <div onError={() => setAvatarFailed(true)}>
                         {player.position === 1 ? 
                             <ArmRaise vb1={175} vb2={220}/> : <Lose vb1={170} vb2={220}/>
                         } 

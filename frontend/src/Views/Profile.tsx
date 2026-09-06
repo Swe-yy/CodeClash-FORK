@@ -3,15 +3,12 @@ import { useState, useEffect } from 'react';
 import { useLogOut, getProfile  } from '../ViewModels/ProfileViewModel';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { Stand } from 'src/animations/poses/rig';
 import { Peace } from 'src/animations/poses/peace';
 import { Okay } from 'src/animations/poses/okay';
 import { Thinking } from 'src/animations/poses/thinking';
-import {X, Check} from "lucide-react"
+import {X} from "lucide-react"
 import Starfield from '@/components/ui/animations/Starfield';
-import Confetti from '@/components/ui/animations/Confetti';
-import GlassCard from '@/components/shared/GlassCard';
 import { ChevronLeft } from 'lucide-react';
 import "../styles/global.css"
 
@@ -28,7 +25,37 @@ const poses = [
   {id: "thinking", label: "Thinking", preview: Thinking}
 ];
 
-function FinalAvatarDisplay({pose, bg, onClick, vb1, vb2, leftMargin, rounded}){
+interface FinalAvatarDisplayProps {
+  pose: string;
+  bg: string; 
+  onClick: () => void;
+  vb1: number;
+  vb2: number;
+  leftMargin: number;
+  rounded: number;
+}
+
+interface AvatarPickerProps {
+  currentPose: string;
+  currentColour: string;
+  onClose: () => void;
+  onSave: (newPose: string, newColour: string) => void;
+}
+
+interface UseUserAvatarProps {
+  vb1 : number,
+  vb2: number,
+  lm: number,
+  round: number
+
+}
+
+interface UseUserPoseProps {
+  vb1: number,
+  vb2: number
+}
+
+function FinalAvatarDisplay({pose, bg, onClick, vb1, vb2, leftMargin, rounded} : FinalAvatarDisplayProps){
   
   const poseData = poses.find((p) => p.id === pose) ?? poses[0];
   const bgData = colours.find((c) => c.id === bg)?? colours[0];
@@ -55,7 +82,7 @@ function FinalAvatarDisplay({pose, bg, onClick, vb1, vb2, leftMargin, rounded}){
   )
 }
 
-function AvatarPicker({currentPose, currentColour, onClose, onSave}) {
+function AvatarPicker({currentPose, currentColour, onClose, onSave} : AvatarPickerProps) {
   const [selectedPose, setSelectedPose] = useState(currentPose);
   const [selectedColour, setSelectedColour] = useState(currentColour);
 
@@ -257,8 +284,8 @@ const Profile = () => {
 
 export default Profile;
 
-export const UseUserAvatar = ({vb1, vb2, lm, round}) => {
-  const{ userData, loadingData, error} = getProfile();
+export const UseUserAvatar = ({vb1, vb2, lm, round} : UseUserAvatarProps) => {
+  const{ userData } = getProfile();
 
   const [pose, setPose] = useState("rig");
   const [colour, setColour] = useState("bg3");
@@ -275,9 +302,9 @@ export const UseUserAvatar = ({vb1, vb2, lm, round}) => {
   );
 }
 
-export const UseUserPose = ({vb1, vb2}) => {
+export const UseUserPose = ({vb1, vb2} : UseUserPoseProps) => {
 
-  const {userData, loadingData, error} = getProfile();
+  const {userData} = getProfile();
     const [pose, setPose] = useState("rig");
 
     useEffect(() => {

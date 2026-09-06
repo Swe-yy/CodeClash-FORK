@@ -171,3 +171,27 @@ it('declines a request and removes it from requests list', async () => {
     }));
     expect(result.current?.requests).toEqual([]);
 })
+
+it ('removes a friend from the friends list', async () => {
+    let removed = false;
+    handlers.unshift((url) => 
+        url === "/api/friends"? jsonRes(true, removed ? [] : [{
+            user_id: 'id3', username: 'removeFriend', avatar_id: '4, elo: 700'
+        }]) : null
+    )
+
+    const {result} = renderFriends();
+    await waitFor(() => expect(result.current?.isLoading).toBe(false));
+    await act(async() => {
+        removed = true;
+        await result.current?.removeFriend('id3');
+    })
+    expect(result.current?.friend).toEqual([]);
+})
+
+it('sets an error when the network request throws', async () => {
+    (globalThis as any).fetch = vi.fn(() => Promise.reject(new Error('down')));
+    const {result} = renderFriends();
+    await waitFor(() => expect(result.current?.isLoading).toBe(false));
+    expect (result.current?.error).toBe('Failed to load friends. Please try again.');
+})

@@ -41,6 +41,8 @@ export class CodeExecutor implements ICodeExecutor {
         catch (error) {
             console.log("ERROR: ", error)
             if (axios.isAxiosError(error)) {
+
+                console.log("returning axios error")
                 return {
                     stdout: null,
                     time: '',
@@ -56,7 +58,8 @@ export class CodeExecutor implements ICodeExecutor {
                 }
             }
 
-            throw error;
+            console.log("throwing error")
+            throw ('Error Marking Submission');
         }
     }
 }

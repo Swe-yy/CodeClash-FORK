@@ -4,6 +4,7 @@ import type { Icons } from "src/Models/AchievementsModel";
 import { getIcon } from "src/utils/achievementIcon";
 
 import { useAuth } from "../Auth/hooks/useAuth";
+import { FriendRequestToast } from "./FriendRequestToast";
 
 interface ToastData {
     name: string;
@@ -112,7 +113,7 @@ export const AchievementToastProvider: React.FC<{ children: React.ReactNode }> =
     const dismissFriendRequest = useCallback(() => {
         setFriendRequestQueue(prev => prev.slice(1));
     }, []);
-    
+
     return(
         <AchievementToastContext.Provider value={{ showAchievement, showFriendRequest }}>
             {children}
@@ -123,6 +124,13 @@ export const AchievementToastProvider: React.FC<{ children: React.ReactNode }> =
                     description={queue[0].description}
                     icon={queue[0].icon}
                     onDismiss={dismiss}
+                />
+            )}
+            {friendRequestQueue[0] && (
+                <FriendRequestToast
+                    key={friendRequestQueue[0]}
+                    username={friendRequestQueue[0]}
+                    onDismiss={dismissFriendRequest}
                 />
             )}
         </AchievementToastContext.Provider>

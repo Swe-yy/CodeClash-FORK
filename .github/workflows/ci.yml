@@ -94,10 +94,10 @@ jobs:
         PORT: ${{secrets.PORT}}
 
     - name: Starting backend
-      run: npm run start:server > /tmp/backend.log 2>&1 &
+      run: npm run start > /tmp/backend.log 2>&1 &
       working-directory: backend
       env:
-        DB_HOST: ${{secrets.DB_TEST_HOST}}
+        DB_HOST: localhost
         DB_PORT: ${{secrets.DB_TEST_PORT}}
         DB_USER: ${{secrets.DB_TEST_USER}}
         DB_PASSWORD: ${{secrets.DB_TEST_PASSWORD}}

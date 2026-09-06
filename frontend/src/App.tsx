@@ -1,4 +1,4 @@
-import type React from "react";
+import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 
 import { useAuth } from "./context/Auth/hooks/useAuth";
@@ -46,11 +46,10 @@ const App: React.FC = () => {
                 <Route path='/' element={<Landing />} />
                 <Route path='/sign-in' element={<SignIn />} />
                 <Route path='/sign-up' element={<SignUp />} />
-                <Route path='/terms' element={<TermsAndConditions/>}/>
-                <Route path= '/brand-style-guide' element={<BrandStyleGuide/>}/>
-                <Route path='/game-guide' element={<GameGuide/>}/>
-                <Route path="/help-menu" element={<HelpMenu/>}/>
-
+                <Route path='terms' element={<TermsAndConditions />} />
+                <Route path='/brand-style-guide' element={<BrandStyleGuide />} />
+                <Route path='/game-guide' element={<GameGuide />} />
+                <Route path='/help-menu' element={<HelpMenu />} />
                 <Route path='*' element={<Navigate to='/sign-in' replace />} />
 
             </Routes>
@@ -59,8 +58,6 @@ const App: React.FC = () => {
 
     return (
         <Routes>
-            <Route path='/' element={<Navigate to='/dashboard' replace/>} />
-
             <Route path='/sign-in' element={<SignIn />} />
             <Route path='/sign-up' element={<SignUp />} />
             <Route path='/profile' element={<Profile />} />
@@ -80,17 +77,17 @@ const App: React.FC = () => {
             <Route element={<Layout />}>
                 <Route path='/' element={<Dashboard/>} />
                 <Route path='/dashboard' element={<Dashboard />} />
-                <Route path='/help-menu' element={<HelpMenu/>}/>
-                <Route path='/tournaments' element={<Tournaments/>}/>
-                <Route path='/leaderboard' element={<Leaderboard/>}/>
-                <Route path='/achievements' element={<Achievements/>} />
-                <Route path='/friends' element={<Friends/>}/>
-                <Route path='/match-history' element={<MatchHistory/>}/>
-                <Route path="/shop" element={<Shop/>}/>
-                <Route path='/settings' element={<Settings/>}/>
+                <Route path='/help-menu' element={<HelpMenu />} />
+                <Route path='/tournaments' element={<Tournaments />} />
+                <Route path='/leaderboard' element={<Leaderboard />} />
+                <Route path='/achievements' element={<Achievements />} />
+                <Route path='/friends' element={<Friends />} />
+                <Route path='/match-history' element={<MatchHistory />} />
+                <Route path="/shop" element={<Shop />} />
+                <Route path='/settings' element={<Settings />} />
             </Route>
 
-            <Route path="*" element={<Navigate to='/dashboard' replace/>}/>
+            <Route path="*" element={<Navigate to='/dashboard' replace />} />
         </Routes>
     )
 }

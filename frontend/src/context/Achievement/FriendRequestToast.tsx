@@ -1,6 +1,5 @@
 import { UserPlus } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import type { FriendRequest } from "src/Models/FriendsModel";
 
 interface FriendREquestToastProps {
     username: string;

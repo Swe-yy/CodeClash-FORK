@@ -13,6 +13,7 @@ interface ToastData {
 
 interface AchievementToastContextValue {
     showAchievement: (data: ToastData) => void;
+    showFriendRequest: (username:string) => void;
 }
 
 const AchievementToastContext = createContext<AchievementToastContextValue | null>(null);
@@ -27,10 +28,18 @@ export const AchievementToastProvider: React.FC<{ children: React.ReactNode }> =
     const [queue, setQueue] = useState<ToastData[]>([]);
     const { token } = useAuth();
     const prevEarnedIds = useRef<Set<string>>(new Set());
-     const isFirstFetch = useRef(true);
+    const isFirstFetch = useRef(true);
+
+    const [friendRequestQueue, setFriendRequestQueue] = useState<string[]>([]);
+    const prevRequestIds =  useRef<Set<string>>(new Set());
+    const isFriendFirstFetch = useRef(true);
      
     const showAchievement = useCallback((data: ToastData) => {
         setQueue(prev => [...prev, data]);
+    }, []);
+
+    const showFriendRequest = useCallback((username: string) => {
+        setFriendRequestQueue(prev => [...prev, username]);
     }, []);
 
     useEffect(() => {
@@ -68,8 +77,44 @@ export const AchievementToastProvider: React.FC<{ children: React.ReactNode }> =
         setQueue(prev => prev.slice(1));
     }, []);
 
+    useEffect(() => {
+        if (!token) return;
+
+        const checkFriendRequests = async () => {
+            try {
+                const res = await fetch('api/friends/requests?type=received', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                if (!res.ok) return;
+                const data = await res.json();
+
+                if(isFriendFirstFetch.current) {
+                    prevRequestIds.current = new Set(data.map((r: any) => r.friendship_id));
+                    isFriendFirstFetch.current = false;
+                    return;
+                }
+
+                const newRequests = data.filter((r: any) => !prevRequestIds.current.has(r.friendship_id));
+                for (const r of newRequests){
+                    showFriendRequest(r.username);
+                }
+                prevRequestIds.current = new Set(data.map((r: any) => r.friendship_id));
+            } catch (err) {
+                console.error('Error checking friend requests:', err);
+            }
+        };
+
+        checkFriendRequests();
+        const interval = setInterval(checkFriendRequests, 30_000);
+        return () => clearInterval(interval);
+    }, [token, showFriendRequest]);
+
+    const dismissFriendRequest = useCallback(() => {
+        setFriendRequestQueue(prev => prev.slice(1));
+    }, []);
+    
     return(
-        <AchievementToastContext.Provider value={{ showAchievement }}>
+        <AchievementToastContext.Provider value={{ showAchievement, showFriendRequest }}>
             {children}
             {queue[0] && (
                 <AchievementToast

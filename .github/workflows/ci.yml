@@ -76,7 +76,7 @@ jobs:
       working-directory: frontend
 
     - name: Test and coverage backend
-      run: npm run test:backend:coverage
+      run: npm run test:backend:coverage:ci
       env:
         DB_HOST: localhost
         DB_PORT: ${{secrets.DB_TEST_PORT}}

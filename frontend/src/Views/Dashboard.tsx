@@ -84,8 +84,6 @@ const Dashboard = () => {
                 <div>
                   <span>League - {league}</span>
                   <p className='text-xl font-black text-primart-text'>{username}</p>
-                  {/* below is to just stop tsc -b errors: */}
-                  <p>{avatar}</p>
                 </div>
               </div>
 

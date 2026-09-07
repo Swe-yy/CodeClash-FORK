@@ -6,15 +6,19 @@ WITH q AS (
             difficulty,
             title,
             description,
-            time_limit
+            time_limit,
+            answer_format,
+            answer_precision
         )
     VALUES
         (
             'math', --NOSONAR
             2,
             'Linear Equations',
-            'Solve the following system of equations:\n2x + 3y = 11\n4x - y = 7',
-            '00:02:00' --NOSONAR
+            'Solve the following system of equations:\n2x + 3y = 11\n4x - y = 7\nAnswer format: x=..., y=... using exact fractions, e.g. x=3/4, y=-1/2',
+            '00:02:00', --NOSONAR
+            'variables',
+            NULL
         ) RETURNING question_id
 )
 INSERT INTO
@@ -33,15 +37,19 @@ WITH q AS (
             difficulty,
             title,
             description,
-            time_limit
+            time_limit,
+            answer_format,
+            answer_precision
         )
     VALUES
         (
             'math', --NOSONAR
             1,
             'Evaluate Quadratic Function',
-            'If f(x) = 3x² - 5x + 2, find the value of f(-2).',
-            '00:01:00' --NOSONAR
+            'If f(x) = 3x² - 5x + 2, find the value of f(-2).\nAnswer format: a signle number, e.g. 243',
+            '00:01:00', --NOSONAR
+            'numeric',
+            NULL
         ) RETURNING question_id
 )
 INSERT INTO
@@ -60,15 +68,19 @@ WITH q AS (
             difficulty,
             title,
             description,
-            time_limit
+            time_limit,
+            answer_format,
+            answer_precision
         )
     VALUES
         (
             'math', --NOSONAR
             2,
             'Algebraic Simplification',
-            'Simplify the expression:\n((x² - 4)(x + 1)) / ((x - 2)(x² - 1))',
-            '00:02:00' --NOSONAR
+            'Simplify the expression:\n((x² - 4)(x + 1)) / ((x - 2)(x² - 1))\nAnswer format: a fully simplified expression of x, e.g. (x+8)/(x-9)',
+            '00:02:00', --NOSONAR
+            'simplified',
+            NULL
         ) RETURNING question_id
 )
 INSERT INTO
@@ -87,15 +99,19 @@ WITH q AS (
             difficulty,
             title,
             description,
-            time_limit
+            time_limit,
+            answer_format,
+            answer_precision
         )
     VALUES
         (
             'math', --NOSONAR
             2,
             'Solve Quadratic Equation',
-            'Find the roots of the quadratic equation:\nx² - 7x + 10 = 0',
-            '00:02:00' --NOSONAR
+            'Find the roots of the quadratic equation:\nx² - 7x + 10 = 0\nAnswer format: comma seperated values, any order, e.g. 9,-3',
+            '00:02:00', --NOSONAR
+            'set',
+            NULL
         ) RETURNING question_id
 )
 INSERT INTO
@@ -114,15 +130,19 @@ WITH q AS (
             difficulty,
             title,
             description,
-            time_limit
+            time_limit,
+            answer_format,
+            answer_precision
         )
     VALUES
         (
             'math', --NOSONAR
             1,
             'Arithmetic Sequence',
-            'Given that the first term of an arithmetic sequence is 5 and the common difference is 3, find the 15th term.',
-            '00:03:00' --NOSONAR
+            'Given that the first term of an arithmetic sequence is 5 and the common difference is 3, find the 15th term.\nAnswer format: a single number, e.g. 47',
+            '00:03:00', --NOSONAR
+            'numeric',
+            NULL
         ) RETURNING question_id
 )
 INSERT INTO
@@ -141,15 +161,19 @@ WITH q AS (
             difficulty,
             title,
             description,
-            time_limit
+            time_limit,
+            answer_format,
+            answer_precision
         )
     VALUES
         (
             'math', --NOSONAR
             3,
             'Solve Exponential Equation',
-            'Solve for x:\n5^(x + 1) = 125',
-            '00:02:00' --NOSONAR
+            'Solve for x:\n5^(x + 1) = 125\nAnswer format: x=.... using exact fractions where necessary, e.g. x=4',
+            '00:02:00', --NOSONAR
+            'variables',
+            NULL
         ) RETURNING question_id
 )
 INSERT INTO
@@ -168,22 +192,26 @@ WITH q AS (
             difficulty,
             title,
             description,
-            time_limit
+            time_limit,
+            answer_format,
+            answer_precision
         )
     VALUES
         (
             'math', --NOSONAR
             3,
             'Rectangle Area Problem',
-            'If a rectangle has a length of (2x + 1) units and a width of (x - 3) units, and its area is 20 square units, find the possible values of x.\nRound to 2 decimal points if needed',
-            '00:04:00' --NOSONAR
+            'If a rectangle has a length of (2x + 1) units and a width of (x - 3) units, and its area is 20 square units, find the possible values of x.\nAnswer format: a single umber rounded to 2 decimal places, e.g. 1.76',
+            '00:04:00', --NOSONAR
+            'decimal',
+            2
         ) RETURNING question_id
 )
 INSERT INTO
     answers(question_id, answer)
 SELECT
     question_id,
-    '4.86'
+    '(5 + sqrt(209))/4'
 FROM
     q;
 
@@ -195,15 +223,19 @@ WITH q AS (
             difficulty,
             title,
             description,
-            time_limit
+            time_limit,
+            answer_format,
+            answer_precision
         )
     VALUES
         (
             'math', --NOSONAR
             2,
             'Equation of a Straight Line',
-            'Determine the equation of a line that passes through the point (3, -2) and has a slope of 1/2.\nAnswer in the form ax + by = c',
-            '00:02:00' --NOSONAR
+            'Determine the equation of a line that passes through the point (3, -2) and has a slope of 1/2.\nAnswer in the form ax + by = c.\nAnswer format: an equation in the form ax + by = c, e.g. 3x - 2y = 5',
+            '00:02:00', --NOSONAR
+            'equation',
+            NULL
         ) RETURNING question_id
 )
 INSERT INTO
@@ -222,15 +254,19 @@ WITH q AS (
             difficulty,
             title,
             description,
-            time_limit
+            time_limit,
+            answer_format,
+            answer_precision
         )
     VALUES
         (
             'math', --NOSONAR
             3,
             'Factor Cubic Polynomial',
-            'Factor the cubic polynomial:\nx³ - 2x² - 5x + 6',
-            '00:03:00' --NOSONAR
+            'Factor the cubic polynomial:\nx³ - 2x² - 5x + 6\nAnswer format: a product of linear factors, e.g. (x-3)(x-7)(x+9)',
+            '00:03:00', --NOSONAR
+            'factored',
+            NULL
         ) RETURNING question_id
 )
 INSERT INTO
@@ -249,15 +285,19 @@ WITH q AS (
             difficulty,
             title,
             description,
-            time_limit
+            time_limit,
+            answer_format,
+            answer_precision
         )
     VALUES
         (
             'math', --NOSONAR
             2,
             'Geometric Sequence Sum',
-            'Given a geometric sequence with the first term a = 4 and the common ratio r = 2, find the sum of the first 6 terms.',
-            '00:02:00' --NOSONAR
+            'Given a geometric sequence with the first term a = 4 and the common ratio r = 2, find the sum of the first 6 terms.\nAnswer format: a single number, e.g. 252',
+            '00:02:00', --NOSONAR
+            'numeric',
+            NULL
         ) RETURNING question_id
 )
 INSERT INTO

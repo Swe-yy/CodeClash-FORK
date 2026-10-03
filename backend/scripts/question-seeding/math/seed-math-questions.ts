@@ -1,5 +1,20 @@
-import { pool } from "../db";
+import { Pool } from "pg";
 import { containsDiagram, extractAnswer, fetchAllRows, SeedQuestion, transformRow } from "./helpers";
+import dotenv from 'dotenv'
+dotenv.config({path: ".env.dev"});
+
+
+const env = process.env;
+
+const pool = new Pool({
+    host:"localhost",
+    port: Number(env.DB_PORT),
+    user: env.DB_USER,
+    password: env.DB_PASSWORD,
+    database: env.DB_NAME
+});
+
+
 
 // INSERTING INTO DB
 
@@ -45,6 +60,7 @@ async function insertQuestions(questions: SeedQuestion[]) {
     }
     return insert;
 }
+
 
 async function main() {
     const raw_rows = await fetchAllRows();

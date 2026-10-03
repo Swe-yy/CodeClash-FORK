@@ -24,8 +24,6 @@ export const useSubmission = ({
 }: SubmissionProps) => {
     const [results, setResults] = useState<(boolean | null)[][]>([]);
     const [lastResult, setLastResult] = useState<{ correct: boolean; id: number } | null>(null);
-    const [marking, setMarking] = useState(false);
-    const [markingError, setMarkingError] = useState<string | null>(null);
     const { userId } = useUser();
     const { matchSocket } = useSocket();
 
@@ -43,7 +41,6 @@ export const useSubmission = ({
 
     const submissionError = (error: string) => {
         console.error(error)
-        setMarkingError(error);
     }
 
     const submitQuestion = async (data: MathsSubmissionDTO | ProgSubmissionDTO, match_type: MatchType, match_mode: MatchMode, tournament_id?: string) => {
@@ -59,33 +56,21 @@ export const useSubmission = ({
             submission: data
         }
 
-        setMarking(true);
-        setMarkingError(null);
+        let result;
 
-        // emit rejects when the server reports an error, so catch it here instead of leaving it unhandled
-        try {
-            let result;
+        if (match_type === 'tournament') {
+            result = await matchSocket?.submitAnswer({ ...submission, tournament_id: tournament_id });
 
-            if (match_type === 'tournament') {
-                result = await matchSocket?.submitAnswer({ ...submission, tournament_id: tournament_id });
+        } else
+            result = await matchSocket?.submitAnswer(submission);
 
-            } else
-                result = await matchSocket?.submitAnswer(submission);
-
-            if (result !== undefined && result.ok) {
-                updatePlayerLife(result.data!.player_id, result.data!.life_update);
-                submissionResult(result.data!);
-                setLastResult({ correct: result.data!.correct, id: Date.now() });
-            }
-            else {
-                submissionError("Marking Error");
-            }
+        if (result !== undefined && result.ok) {
+            updatePlayerLife(result.data!.player_id, result.data!.life_update);
+            submissionResult(result.data!);
+            setLastResult({ correct: result.data!.correct, id: Date.now() });
         }
-        catch (error) {
-            submissionError(error instanceof Error ? error.message : "Marking Error");
-        }
-        finally {
-            setMarking(false);
+        else {
+            submissionError("Marking Error");
         }
     }
 
@@ -95,8 +80,6 @@ export const useSubmission = ({
     return {
         results,
         lastResult,
-        marking,
-        markingError,
         submissionError,
         submissionResult,
         submitQuestion

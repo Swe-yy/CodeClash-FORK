@@ -20,7 +20,7 @@ export function MatchHistoryViewModelFunction(): MatchHistoryViewModel {
     const [selected, setSelected] = useState<MatchRow | null>(null);
     const [isDetails, setIsDetails] = useState(false);
     const [matches, setMatches] = useState<MatchRow[]>([]);
-    const { token, user } = useAuth();
+    const { token } = useAuth();
 
     useEffect( () => {
         if( !token) return;
@@ -30,37 +30,32 @@ export function MatchHistoryViewModelFunction(): MatchHistoryViewModel {
         }).then(res => {
             setMatches(res.data.map((m: any) => ({
                 id: m.match_id,
-                mode: m.match_mode.toUpperCase(),
-                type: m.match_type.toUpperCase(),
+                mode: m.mode.toUpperCase(),
+                type: m.game_type.toUpperCase(),
                 timestamp: new Date(m.match_start).toLocaleString('en-US', {
                     month: 'long', day: 'numeric', year: 'numeric',
                     hour:'2-digit', minute:'2-digit'
                 }),
-                result: m.position === 1 ? 'WIN' : 'LOSS',
+                result: m.result,
                 details: null
             })));
         }).catch(err => console.error('Error fetching match history:', err));
     }, [token]);
 
     const handleRowClick = useCallback(async (match: MatchRow) => {
-        if (!token || !user) return;
+        if (!token) return;
         try {
             const res = await axios.get(url.concat(`matches/${match.id}`), {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            // DB user_id is the Cognito sub, so match on it and fall back to username
-            const me = res.data.players.find((p: any) => p.user_id === user.userId)
-                ?? res.data.players.find((p: any) => p.username === user.username);
-            if (!me) throw new Error('Player not found in match results');
-
             setSelected({
                 ...match,
                 details: {
-                    score: `${me.correctness}%`,
-                    totalTime: formatDuration(me.speed),
-                    eloChange: me.eloEffect ?? 0,
-                    date: match.timestamp,
-                    time: ''
+                    score: res.data.score,
+                    totalTime: res.data.totalTime,
+                    numCorrect: res.data.questions.length,
+                    date: formatDate(res.data.match_start),
+                    time: formatTime(res.data.match_start)
                 }
             });
             setIsDetails(true);
@@ -68,7 +63,7 @@ export function MatchHistoryViewModelFunction(): MatchHistoryViewModel {
             console.error('Error fetching match details:', err);
         }
         
-    }, [token, user]);
+    }, [token]);
 
     const handleCloseDetails = useCallback(() => {
         setIsDetails(false);
@@ -84,9 +79,10 @@ export function MatchHistoryViewModelFunction(): MatchHistoryViewModel {
     };
 }
 
-function formatDuration(ms: number): string {
-    const totalSeconds = Math.round(ms / 1000);
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = totalSeconds % 60;
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+function formatDate(iso: string): string {
+    return new Date(iso).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).toUpperCase();
+}
+
+function formatTime(iso: string): string {
+    return new Date(iso).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 }

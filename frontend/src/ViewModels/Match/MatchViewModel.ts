@@ -102,8 +102,9 @@ export const useMatch = () => {
     const both_done = async () => {
         // useMatchStore.getState().reset();
         setWaitingOpponent(false);
-        await nav(`/results/${match_id}`, {
-            replace: true,
+        nav(`/results/${match_id}`, {
+          replace: true,
+          state: { id: match_id }
         });
     }
 

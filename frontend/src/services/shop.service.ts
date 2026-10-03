@@ -151,6 +151,7 @@ function authHeaders(token: string): HeadersInit {
 async function handle<T>(res: Response): Promise<T> {
     if (!res.ok) {
         const body = await res.json().catch(() => null);
+        console.error(`Request failed (${res.status})`)
         throw new Error(body?.error ?? body?.message ?? `Request failed (${res.status})`);
     }
     return res.json();
@@ -200,18 +201,14 @@ export const equipItm = async (
     itemId: string,
     token: string
 ): Promise<UserInventory> => {
-    // Themes use the backend's PATCH /shop/equipped contract; the avatar request is unchanged in this release
-    const res = category === 'theme'
-        ? await fetch(EQUIP_URL, {
-            method: 'PATCH',
-            headers: authHeaders(token),
-            body: JSON.stringify({ theme_id: itemId }),
-        })
-        : await fetch(EQUIP_URL, {
-            method: 'POST',
-            headers: authHeaders(token),
-            body: JSON.stringify({ category, shop_item_id: itemId }),
-        });
+    const payload: { avatar_item_id?: string; theme_id?: string } =
+        category === 'avatar' ? { avatar_item_id: itemId } : { theme_id: itemId };
+
+    const res = await fetch(EQUIP_URL, {
+        method: 'PATCH',
+        headers: authHeaders(token),
+        body: JSON.stringify(payload),
+    });
 
     await handle(res);
     return getInv(token);

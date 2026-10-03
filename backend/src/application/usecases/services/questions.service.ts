@@ -2,6 +2,7 @@ import { MatchMode, MatchQuestionArrays } from "src/entities/dtos/matches/match.
 import { leagueMapping } from "src/entities/league-mapping";
 
 import { IQuestionRepository } from "../../interfaces/repositories/IQuestionRepository";
+import { timeLimitMs } from "./skill/question-results";
 
 
 export class GetQuestions {
@@ -28,22 +29,16 @@ export class GetQuestions {
 
     
         return {
-            easy: easy_questions.map(q => ({ ...q, difficulty: "Easy" })),
-            medium: medium_questions.map(q => ({ ...q, difficulty: "Medium" })),
-            hard: hard_questions.map(q => ({ ...q, difficulty: "Hard" }))
+          easy: easy_questions.map(q=>({...q, difficulty_level: Number(q.difficulty), difficulty: "Easy"})),
+          medium: medium_questions.map(q=>({...q, difficulty_level: Number(q.difficulty), difficulty: "Medium"})),
+          hard: hard_questions.map(q=>({...q, difficulty_level: Number(q.difficulty), difficulty: "Hard"}))
         }
     }
 }
 
-// time_limit is a postgres TIME (HH:MM:SS)
-const timeLimitMs = (time_limit: string): number => {
-    const [hours = 0, minutes = 0, seconds = 0] = time_limit.split(':').map(Number);
-    return ((hours * 60 + minutes) * 60 + seconds) * 1000;
-};
-
 export class GetTotalTime {
 
-    // Total match time in minutes (may be fractional)
+    // Total match time in minutes (may be fractional); time_limit is a postgres TIME (HH:MM:SS)
     execute(questions: MatchQuestionArrays) {
         const all = [...questions.easy, ...questions.medium, ...questions.hard];
         const total_ms = all.reduce((sum, question) => sum + timeLimitMs(question.time_limit), 0);

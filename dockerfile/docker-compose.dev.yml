@@ -4,7 +4,7 @@ services:
       context: ../backend
       dockerfile: Dockerfile.dev
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      test: ["CMD", "wget", "-qO-", "-T", "3", "http://localhost:3000/health"]
       interval: 5s
       timeout: 3s
       retries: 5
@@ -112,5 +112,4 @@ volumes:
 
 networks:
   pgnetwork:
-    # Fixed name so the Judge0 compose (judge0-v1.13.1) can join it
     name: pgnetwork
